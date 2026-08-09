@@ -1,3 +1,7 @@
+.left-panel {
+    -fx-background-color: rgba(0, 0, 0, 0.60);
+    -fx-padding: 15;
+}
 .progress-bar {
      -fx-padding: 0;
      -fx-background-insets: 0;
@@ -17,4 +21,27 @@
 }
 .progress-label {
     -fx-text-fill: white;
+}
+
+.achievement-scroll,
+.achievement-scroll > .viewport {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.achievement-checkbox .box {
+    -fx-background-color: transparent;
+    -fx-border-color: #777777;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.achievement-checkbox:selected .box {
+    -fx-background-color: #7a0014;
+    -fx-border-color: #b00020;
+}
+
+.achievement-checkbox:selected .mark {
+    -fx-background-color: white;
 }

@@ -1,10 +1,11 @@
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -34,10 +35,14 @@ public class Window extends Application {
         ScrollPane scrollPane = new ScrollPane(achievementsBox);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefWidth(400);
+        scrollPane.getStyleClass().add("achievement-scroll");
         scrollPane.setStyle(
                 "-fx-background-color: transparent;" +
                         "-fx-background: transparent;"
         );
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setPannable(false);
+
 
 
         achievementsBox.setStyle("-fx-background-color: transparent;");
@@ -54,8 +59,9 @@ public class Window extends Application {
                 "-fx-accent: #b00020;"
         );
 
-        Label progressLabel = new Label("0/" + TOTAL_ACHIEVEMENTS);
-        Font requiemFont = Font.loadFont(getClass().getResourceAsStream("/font.ttf"), 20);
+        Label progressLabel = new Label("Completed: 0/" + TOTAL_ACHIEVEMENTS);
+        progressLabel.setPadding(new Insets(5));
+        Font requiemFont = Font.loadFont(getClass().getResourceAsStream("/font.ttf"), 17);
         progressLabel.setFont(requiemFont);
         progressLabel.getStyleClass().add("progress-label");
 
@@ -97,31 +103,126 @@ public class Window extends Application {
         logoView.setFitWidth(450);
         logoView.setPreserveRatio(true);
 
+        Label completionLabel = new Label();
+        completionLabel.textProperty().bind(
+                Bindings.createStringBinding(
+                        () -> Math.round(
+                                (double) completed.get() / TOTAL_ACHIEVEMENTS * 100
+                        ) + "% OVERALL COMPLETION",
+                        completed
+                )
+        );
+        completionLabel.setMaxWidth(Double.MAX_VALUE);
+        completionLabel.setAlignment(Pos.CENTER);
+        completionLabel.setPadding(new Insets(10));
+        completionLabel.setStyle(
+                "-fx-text-fill: #b00020;"
+        );
+        completionLabel.setFont(
+                Font.font(requiemFont.getFamily(), 26)
+        );
+
+
+        VBox topPanel = new VBox();
         VBox leftPanel = new VBox();
         leftPanel.getChildren().addAll(
-                logoView,
+                topPanel,
                 scrollPane
         );
         root.setLeft(leftPanel);
         leftPanel.setPrefWidth(450);
-        leftPanel.setSpacing(20);
+        leftPanel.setSpacing(10);
         leftPanel.setPadding(new Insets(10));
+        leftPanel.getStyleClass().add("left-panel");
+        topPanel.prefHeightProperty()
+                .bind(leftPanel.heightProperty().multiply(0.25));
+        scrollPane.prefHeightProperty()
+                .bind(leftPanel.heightProperty().multiply(0.75));
+        topPanel.getChildren().addAll(
+                logoView,
+                completionLabel
+        );
+        topPanel.setAlignment(Pos.TOP_CENTER);
 
-        //will later add search bar, filtering and sorting (category and difficulty)
+//will later add search bar, filtering and sorting (category and difficulty)
+        Label categoryLabel = new Label("CATEGORY");
+        ComboBox<String> categoryFilter = new ComboBox<>();
+        categoryFilter.getItems().addAll(
+                "All",
+                "Story",
+                "Crafting",
+                "Combat",
+                "Exploration",
+                "Easter Egg"
+        );
+        categoryFilter.setValue("All");
+        VBox categoryBox = new VBox(3);
+
+        categoryBox.getChildren().addAll(
+                categoryLabel,
+                categoryFilter
+        );
+        HBox filterRow = new HBox(15);
+        filterRow.getChildren().add(categoryBox);
+        topPanel.getChildren().add(filterRow);
+        categoryLabel.setStyle(
+                "-fx-text-fill: white;"
+        );
+        categoryLabel.setFont(
+                Font.font(requiemFont.getFamily(), 17)
+        );
+
+        Label difficultyLabel = new Label("DIFFICULTY");
+        ComboBox<String> difficultyFilter = new ComboBox<>();
+        difficultyFilter.getItems().addAll( "All",
+                " ★☆☆☆☆ ",
+                " ★★☆☆☆ ",
+                " ★★★☆☆ ",
+                " ★★★★☆ ",
+                " ★★★★★ "
+        );
+        difficultyFilter.setValue("All");
+        VBox difficultyBox = new VBox(5);
+        difficultyBox.getChildren().addAll(
+                difficultyLabel,
+                difficultyFilter
+        );
+        filterRow.getChildren().add(difficultyBox);
+        difficultyLabel.setStyle(
+                "-fx-text-fill: white;"
+        );
+        difficultyLabel.setFont(
+                Font.font(requiemFont.getFamily(), 17)
+        );
+
+        Label statusLabel = new Label("STATUS");
+        ComboBox<String> statusFilter = new ComboBox<>();
+        statusFilter.getItems().addAll("All","Completed", "Missing");
+        statusFilter.setValue("All");
+        VBox statusBox = new VBox(5);
+        statusBox.getChildren().addAll(statusLabel, statusFilter);
+        filterRow.getChildren().add(statusBox);
+        statusLabel.setStyle(
+                "-fx-text-fill: white;"
+        );
+        statusLabel.setFont(
+                Font.font(requiemFont.getFamily(), 17)
+        );
+
+        filterRow.setAlignment(Pos.CENTER);
+
 
         for (Achievement achievement : repository.getAllAchievements()) {
 
             CheckBox checkBox = new CheckBox();
+            checkBox.getStyleClass().add("achievement-checkbox");
+
             Label achievementLabel = new Label(
                     achievement.getId()
-                            + " | "
+                            + " "
                             + achievement.getName()
-                            + " | Difficulty: "
-                            + achievement.getDifficulty()
                             + " | "
                             + achievement.getDescription()
-                            + " | "
-                            + achievement.getHint()
             );
             achievementLabel.setFont(Font.font("Lucida Sans Typewriter", 13));
 
@@ -147,7 +248,7 @@ public class Window extends Application {
                 );
 
                 progressLabel.setText(
-                        completed.get() + " / " + TOTAL_ACHIEVEMENTS
+                        "Completed: " + completed.get() + "/" + TOTAL_ACHIEVEMENTS
                 );
             });
         }
@@ -156,7 +257,7 @@ public class Window extends Application {
         stage.setResizable(false);
         scene.getStylesheets().add(
                 getClass().getResource("/style.css").toExternalForm());
-        stage.setTitle("Resident Evil 2 | Achievement Tracker");
+        stage.setTitle("Resident Evil 2 Achievement Tracker");
         stage.setScene(scene);
         stage.show();
     }

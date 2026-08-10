@@ -8,10 +8,18 @@ public class AchievementRepository {
         List<Achievement> achievements = new ArrayList<>();
 
         String sql = """
-                SELECT ID, Name, Description, Difficulty, Hint
-                        FROM Achievement
-                        ORDER BY ID
-                """;
+        SELECT
+            a.ID,
+            a.Name,
+            a.Description,
+            a.Difficulty,
+            a.Hint,
+            c.Name AS CategoryName
+        FROM Achievement a
+        JOIN Category c
+            ON a.Category_ID = c.ID
+        ORDER BY a.ID
+        """;
 
         try (
                 Connection connection = DatabaseConnection.connect();
@@ -24,7 +32,8 @@ public class AchievementRepository {
                         resultSet.getString("Name"),
                         resultSet.getString("Description"),
                         resultSet.getInt("Difficulty"),
-                        resultSet.getString("Hint")
+                        resultSet.getString("Hint"),
+                        resultSet.getString("CategoryName")
                 );
 
                 achievements.add(achievement);

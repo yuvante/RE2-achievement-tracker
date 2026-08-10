@@ -17,7 +17,9 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import java.awt.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javafx.geometry.Insets;
 import javafx.scene.text.Font;
 
@@ -25,12 +27,24 @@ public class Window extends Application {
 
     private static final int TOTAL_ACHIEVEMENTS = 44;
 
+    private List<Achievement> allAchievements;
+    private VBox achievementsBox;
+    private ComboBox<String> categoryFilter;
+    private ComboBox<String> difficultyFilter;
+    private ComboBox<String> statusFilter;
+
+    private IntegerProperty completed;
+    private ProgressBar progressBar;
+    private Label progressLabel;
+
+    private final Set<Integer> completedAchievements = new HashSet<>();
+
     @Override
     public void start(Stage stage) {
 
         AchievementRepository repository = new AchievementRepository();
-
-        VBox achievementsBox = new VBox();
+        allAchievements = repository.getAllAchievements();
+        achievementsBox = new VBox();
 
         ScrollPane scrollPane = new ScrollPane(achievementsBox);
         scrollPane.setFitToWidth(true);
@@ -49,9 +63,9 @@ public class Window extends Application {
 
         BorderPane root = new BorderPane();
 
-        IntegerProperty completed = new SimpleIntegerProperty(0);
+        completed = new SimpleIntegerProperty(0);
 
-        ProgressBar progressBar = new ProgressBar(0);
+        progressBar = new ProgressBar(0);
         progressBar.setMaxWidth(Double.MAX_VALUE);
         progressBar.setPrefWidth(1550);
         progressBar.setPrefHeight(35);
@@ -59,7 +73,7 @@ public class Window extends Application {
                 "-fx-accent: #b00020;"
         );
 
-        Label progressLabel = new Label("Completed: 0/" + TOTAL_ACHIEVEMENTS);
+        progressLabel = new Label("Completed: 0/" + TOTAL_ACHIEVEMENTS);
         progressLabel.setPadding(new Insets(5));
         Font requiemFont = Font.loadFont(getClass().getResourceAsStream("/font.ttf"), 17);
         progressLabel.setFont(requiemFont);
@@ -144,13 +158,12 @@ public class Window extends Application {
         );
         topPanel.setAlignment(Pos.TOP_CENTER);
 
-//will later add search bar, filtering and sorting (category and difficulty)
         Label categoryLabel = new Label("CATEGORY");
-        ComboBox<String> categoryFilter = new ComboBox<>();
+        categoryFilter = new ComboBox<>();
         categoryFilter.getItems().addAll(
                 "All",
                 "Story",
-                "Crafting",
+                "Equipment",
                 "Combat",
                 "Exploration",
                 "Easter Egg"
@@ -173,13 +186,13 @@ public class Window extends Application {
         );
 
         Label difficultyLabel = new Label("DIFFICULTY");
-        ComboBox<String> difficultyFilter = new ComboBox<>();
+        difficultyFilter = new ComboBox<>();
         difficultyFilter.getItems().addAll( "All",
-                " ★☆☆☆☆ ",
-                " ★★☆☆☆ ",
-                " ★★★☆☆ ",
-                " ★★★★☆ ",
-                " ★★★★★ "
+                "★☆☆☆☆",
+                "★★☆☆☆",
+                "★★★☆☆",
+                "★★★★☆",
+                "★★★★★"
         );
         difficultyFilter.setValue("All");
         VBox difficultyBox = new VBox(5);
@@ -196,7 +209,7 @@ public class Window extends Application {
         );
 
         Label statusLabel = new Label("STATUS");
-        ComboBox<String> statusFilter = new ComboBox<>();
+        statusFilter = new ComboBox<>();
         statusFilter.getItems().addAll("All","Completed", "Missing");
         statusFilter.setValue("All");
         VBox statusBox = new VBox(5);
@@ -209,48 +222,16 @@ public class Window extends Application {
                 Font.font(requiemFont.getFamily(), 17)
         );
 
+        allAchievements = repository.getAllAchievements();
+
+        categoryFilter.setOnAction(event -> applyFilters());
+        difficultyFilter.setOnAction(event -> applyFilters());
+        statusFilter.setOnAction(event -> applyFilters());
+
         filterRow.setAlignment(Pos.CENTER);
 
-
-        for (Achievement achievement : repository.getAllAchievements()) {
-
-            CheckBox checkBox = new CheckBox();
-            checkBox.getStyleClass().add("achievement-checkbox");
-
-            Label achievementLabel = new Label(
-                    achievement.getId()
-                            + " "
-                            + achievement.getName()
-                            + " | "
-                            + achievement.getDescription()
-            );
-            achievementLabel.setFont(Font.font("Lucida Sans Typewriter", 13));
-
-            HBox achievementRow = new HBox(
-                    6,
-                    checkBox,
-                    achievementLabel
-            );
-
-            achievementsBox.getChildren().add(achievementRow);
-
-
-            checkBox.setOnAction(event -> {
-
-                if (checkBox.isSelected()) {
-                    completed.set(completed.get() + 1);
-                } else {
-                    completed.set(completed.get() - 1);
-                }
-
-                progressBar.setProgress(
-                        (double) completed.get() / TOTAL_ACHIEVEMENTS
-                );
-
-                progressLabel.setText(
-                        "Completed: " + completed.get() + "/" + TOTAL_ACHIEVEMENTS
-                );
-            });
+        for (Achievement achievement : allAchievements) {
+                displayAchievement(achievement);
         }
 
         Scene scene = new Scene(backgroundPane, 1550, 800);
@@ -262,4 +243,85 @@ public class Window extends Application {
         stage.show();
     }
 
+    private void displayAchievement(Achievement achievement) {
+        CheckBox checkBox = new CheckBox();
+        checkBox.setSelected(
+                completedAchievements.contains(achievement.getId())
+        );
+
+        Label achievementLabel = new Label(
+                achievement.getId()
+                        + " "
+                        + achievement.getName()
+                        + " | "
+                        + achievement.getDescription()
+        );
+
+        HBox achievementRow = new HBox(
+                6,
+                checkBox,
+                achievementLabel
+        );
+
+        achievementsBox.getChildren().add(achievementRow);
+
+        checkBox.setOnAction(event -> {
+            if (checkBox.isSelected()) {
+                completedAchievements.add(achievement.getId());
+            } else {
+                completedAchievements.remove(achievement.getId());
+            }
+
+            completed.set(completedAchievements.size());
+
+            progressBar.setProgress(
+                    (double) completed.get() / TOTAL_ACHIEVEMENTS
+            );
+
+            progressLabel.setText(
+                    "Completed: " + completed.get() + "/" + TOTAL_ACHIEVEMENTS
+            );
+        });
+    }
+
+    private void applyFilters() {
+
+        achievementsBox.getChildren().clear();
+
+        String selectedCategory = categoryFilter.getValue();
+        String selectedDifficulty = difficultyFilter.getValue();
+        String selectedStatus = statusFilter.getValue();
+
+        int selectedDifficultyNumber = switch (selectedDifficulty) {
+            case "★☆☆☆☆" -> 1;
+            case "★★☆☆☆" -> 2;
+            case "★★★☆☆" -> 3;
+            case "★★★★☆" -> 4;
+            case "★★★★★" -> 5;
+            default -> 0;
+        };
+
+        for (Achievement achievement : allAchievements) {
+
+            boolean categoryMatches =
+                    selectedCategory.equals("All")
+                            || achievement.getCategory().equals(selectedCategory);
+
+            boolean difficultyMatches =
+                    selectedDifficulty.equals("All")
+                            || achievement.getDifficulty() == selectedDifficultyNumber;
+
+            boolean isCompleted =
+                    completedAchievements.contains(achievement.getId());
+
+            boolean statusMatches =
+                    selectedStatus.equals("All")
+                            || (selectedStatus.equals("Completed") && isCompleted)
+                            || (selectedStatus.equals("Missing") && !isCompleted);
+
+            if (categoryMatches && difficultyMatches && statusMatches) {
+                displayAchievement(achievement);
+            }
+        }
+    }
 }

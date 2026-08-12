@@ -32,6 +32,7 @@ public class Window extends Application {
     private ComboBox<String> categoryFilter;
     private ComboBox<String> difficultyFilter;
     private ComboBox<String> statusFilter;
+    private TextField searchField;
 
     private IntegerProperty completed;
     private ProgressBar progressBar;
@@ -230,6 +231,28 @@ public class Window extends Application {
 
         filterRow.setAlignment(Pos.CENTER);
 
+        searchField = new TextField();
+        searchField.setPromptText("Search achievements...");
+        searchField.setFont(requiemFont);
+        topPanel.getChildren().add(searchField);
+        VBox.setMargin(searchField, new Insets(10, 0, 0, 0));
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            applyFilters();
+        });
+        String searchText = searchField.getText().toLowerCase();
+        searchField.getStyleClass().add("search-field");
+
+        categoryFilter.getStyleClass().add("filter-combo");
+        difficultyFilter.getStyleClass().add("filter-combo");
+        statusFilter.getStyleClass().add("filter-combo");
+
+        categoryLabel.setFont(Font.font(requiemFont.getFamily(), 16));
+        difficultyLabel.setFont(Font.font(requiemFont.getFamily(), 16));
+        statusLabel.setFont(Font.font(requiemFont.getFamily(), 16));
+        categoryBox.setAlignment(Pos.CENTER);
+        difficultyBox.setAlignment(Pos.CENTER);
+        statusBox.setAlignment(Pos.CENTER);
+
         for (Achievement achievement : allAchievements) {
                 displayAchievement(achievement);
         }
@@ -291,6 +314,7 @@ public class Window extends Application {
         String selectedCategory = categoryFilter.getValue();
         String selectedDifficulty = difficultyFilter.getValue();
         String selectedStatus = statusFilter.getValue();
+        String searchText = searchField.getText().toLowerCase();
 
         int selectedDifficultyNumber = switch (selectedDifficulty) {
             case "★☆☆☆☆" -> 1;
@@ -319,7 +343,15 @@ public class Window extends Application {
                             || (selectedStatus.equals("Completed") && isCompleted)
                             || (selectedStatus.equals("Missing") && !isCompleted);
 
-            if (categoryMatches && difficultyMatches && statusMatches) {
+            boolean searchMatches =
+                    achievement.getName().toLowerCase().contains(searchText)
+                            || achievement.getDescription().toLowerCase().contains(searchText);
+
+            if (categoryMatches
+                    && difficultyMatches
+                    && statusMatches
+                    && searchMatches) {
+
                 displayAchievement(achievement);
             }
         }

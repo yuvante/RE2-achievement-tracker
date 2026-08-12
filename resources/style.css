@@ -23,6 +23,132 @@
     -fx-text-fill: white;
 }
 
+.search-field {
+    -fx-background-color: rgba(0, 0, 0, 0.85);
+    -fx-border-color: #777777;
+    -fx-border-width: 1px;
+
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: white;
+
+    -fx-background-insets: 0;
+
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+
+    -fx-padding: 4px 12px 8px 12px;
+    -fx-display-caret: false;
+}
+
+.search-field:focused {
+    -fx-background-color: rgba(25, 25, 25, 0.85);
+    -fx-border-color: #b00020;
+    -fx-background-insets: 0;
+
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+}
+/* =========================
+   FILTER COMBOBOXES
+   ========================= */
+
+.filter-combo {
+    -fx-background-color: rgba(0, 0, 0, 0.85);
+    -fx-border-color: #777777;
+    -fx-border-width: 1px;
+
+    -fx-background-insets: 0;
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+
+    -fx-font-family: "Requiem 9";
+    -fx-font-size: 14px;
+
+    -fx-padding: 0px 6px 0px 6px;
+}
+
+
+/* Text shown inside closed ComboBox */
+.filter-combo .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+
+    -fx-font-family: "Requiem";
+    -fx-font-size: 14px;
+}
+
+
+/* Arrow area */
+.filter-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+
+/* Actual arrow */
+.filter-combo .arrow {
+    -fx-background-color: #aaaaaa;
+}
+
+
+/* Same red focus effect as search bar */
+.filter-combo:focused {
+    -fx-background-color: rgba(25, 25, 25, 0.85);
+    -fx-border-color: #b00020;
+    -fx-background-insets: 0;
+
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+}
+
+
+/* =========================
+   DROPDOWN
+   ========================= */
+
+.combo-box-popup .list-view {
+    -fx-background-color: rgba(0, 0, 0, 0.95);
+
+    -fx-border-color: #777777;
+    -fx-border-width: 1px;
+
+    -fx-background-insets: 0;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+
+    -fx-padding: 5px 12px;
+}
+
+
+/* Individual options */
+.combo-box-popup .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-family: "Requiem 9";
+    -fx-font-size: 14px;
+    -fx-padding: 6px 10px;
+    -fx-background-radius: 12px;
+}
+
+
+/* Mouse over option */
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: rgba(176, 0, 32, 0.45);
+}
+
+
+/* Selected option */
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: rgba(176, 0, 32, 0.75);
+    -fx-text-fill: white;
+    -fx-font-family: "Requiem 9";
+    -fx-background-radius: 12px;
+}
+
+.filter-combo .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-family: "Requiem 9";
+}
 .achievement-scroll,
 .achievement-scroll > .viewport {
     -fx-background-color: transparent;

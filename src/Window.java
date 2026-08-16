@@ -8,14 +8,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.image.Image;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import java.util.HashSet;
 import java.util.List;
@@ -57,11 +55,9 @@ public class Window extends Application {
         );
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setPannable(false);
-
-
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
         achievementsBox.setStyle("-fx-background-color: transparent;");
-
         BorderPane root = new BorderPane();
 
         completed = new SimpleIntegerProperty(0);
@@ -75,10 +71,11 @@ public class Window extends Application {
         );
 
         progressLabel = new Label("Completed: 0/" + TOTAL_ACHIEVEMENTS);
-        progressLabel.setPadding(new Insets(5));
-        Font requiemFont = Font.loadFont(getClass().getResourceAsStream("/font.ttf"), 17);
+        Font requiemFont = Font.loadFont(getClass().getResourceAsStream("/font.ttf"), 18);
         progressLabel.setFont(requiemFont);
         progressLabel.getStyleClass().add("progress-label");
+        StackPane.setAlignment(progressLabel, Pos.TOP_CENTER);
+        progressLabel.setPadding(new Insets(0, 0, 2, 0));
 
         StackPane progressPane = new StackPane(
                 progressBar,
@@ -146,18 +143,17 @@ public class Window extends Application {
         );
         root.setLeft(leftPanel);
         leftPanel.setPrefWidth(450);
-        leftPanel.setSpacing(10);
-        leftPanel.setPadding(new Insets(10));
+        leftPanel.setSpacing(5);
+        leftPanel.setPadding(new Insets(5, 5, 5, 5));
         leftPanel.getStyleClass().add("left-panel");
-        topPanel.prefHeightProperty()
-                .bind(leftPanel.heightProperty().multiply(0.25));
-        scrollPane.prefHeightProperty()
-                .bind(leftPanel.heightProperty().multiply(0.75));
         topPanel.getChildren().addAll(
                 logoView,
                 completionLabel
         );
         topPanel.setAlignment(Pos.TOP_CENTER);
+
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+        scrollPane.setMaxHeight(Double.MAX_VALUE);;
 
         Label categoryLabel = new Label("CATEGORY");
         categoryFilter = new ComboBox<>();
@@ -182,9 +178,6 @@ public class Window extends Application {
         categoryLabel.setStyle(
                 "-fx-text-fill: white;"
         );
-        categoryLabel.setFont(
-                Font.font(requiemFont.getFamily(), 17)
-        );
 
         Label difficultyLabel = new Label("DIFFICULTY");
         difficultyFilter = new ComboBox<>();
@@ -205,9 +198,6 @@ public class Window extends Application {
         difficultyLabel.setStyle(
                 "-fx-text-fill: white;"
         );
-        difficultyLabel.setFont(
-                Font.font(requiemFont.getFamily(), 17)
-        );
 
         Label statusLabel = new Label("STATUS");
         statusFilter = new ComboBox<>();
@@ -218,9 +208,6 @@ public class Window extends Application {
         filterRow.getChildren().add(statusBox);
         statusLabel.setStyle(
                 "-fx-text-fill: white;"
-        );
-        statusLabel.setFont(
-                Font.font(requiemFont.getFamily(), 17)
         );
 
         allAchievements = repository.getAllAchievements();
@@ -233,7 +220,7 @@ public class Window extends Application {
 
         searchField = new TextField();
         searchField.setPromptText("Search achievements...");
-        searchField.setFont(requiemFont);
+        searchField.setFont(Font.font("Requiem 9", 16));
         topPanel.getChildren().add(searchField);
         VBox.setMargin(searchField, new Insets(10, 0, 0, 0));
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -268,31 +255,74 @@ public class Window extends Application {
 
     private void displayAchievement(Achievement achievement) {
         CheckBox checkBox = new CheckBox();
+
         checkBox.setSelected(
                 completedAchievements.contains(achievement.getId())
         );
 
-        Label achievementLabel = new Label(
-                achievement.getId()
-                        + " "
-                        + achievement.getName()
-                        + " | "
-                        + achievement.getDescription()
+        Label nameLabel = new Label(achievement.getName());
+
+        Label categoryLabel = new Label(
+                achievement.getCategory().toUpperCase()
+        );
+        Label descriptionLabel = new Label(
+                achievement.getDescription()
         );
 
-        HBox achievementRow = new HBox(
-                6,
-                checkBox,
-                achievementLabel
+        VBox achievementInfo = new VBox();
+        VBox.setMargin(descriptionLabel, new Insets(5, 0, 0, 0));
+
+        String stars =
+                "★".repeat(achievement.getDifficulty())
+                        + "☆".repeat(5 - achievement.getDifficulty());
+
+        Label difficultyLabel = new Label(stars);
+        difficultyLabel.setStyle("-fx-text-fill: white;");
+
+        achievementInfo.getChildren().addAll(
+                nameLabel,
+                categoryLabel,
+                difficultyLabel,
+                descriptionLabel
         );
+        HBox achievementRow = new HBox(
+                checkBox,
+                achievementInfo
+        );
+
+        achievementInfo.setSpacing(1);
+        achievementRow.setSpacing(10);
+        achievementRow.setPadding(new Insets(7, 8, 7, 8));
+        achievementRow.setAlignment(Pos.TOP_LEFT);
+        checkBox.setTranslateY(6);
+
+        nameLabel.setFont(Font.font("IBM Plex Sans",FontWeight.BOLD, 20));
+        categoryLabel.setFont(Font.font("IBM Plex Sans",FontWeight.BOLD, 12));
+        difficultyLabel.setFont(Font.font("IBM Plex Sans", FontWeight.BOLD, 11));
+        descriptionLabel.setFont(Font.font("IBM Plex Sans", 16));
+
+        nameLabel.setStyle("-fx-text-fill: white;");
+        categoryLabel.setStyle("-fx-text-fill: white;");
+        descriptionLabel.setStyle("-fx-text-fill: white;");
+        descriptionLabel.setWrapText(true);
+        descriptionLabel.setMaxWidth(360);
+        checkBox.getStyleClass().add("achievement-checkbox");
 
         achievementsBox.getChildren().add(achievementRow);
+
+        achievementRow.getStyleClass().add("achievement-row");
+
+        if (completedAchievements.contains(achievement.getId())) {
+            achievementRow.getStyleClass().add("completed");
+        }
 
         checkBox.setOnAction(event -> {
             if (checkBox.isSelected()) {
                 completedAchievements.add(achievement.getId());
+                achievementRow.getStyleClass().add("completed");
             } else {
                 completedAchievements.remove(achievement.getId());
+                achievementRow.getStyleClass().remove("completed");
             }
 
             completed.set(completedAchievements.size());

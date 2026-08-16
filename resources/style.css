@@ -1,6 +1,5 @@
 .left-panel {
     -fx-background-color: rgba(0, 0, 0, 0.60);
-    -fx-padding: 15;
 }
 .progress-bar {
      -fx-padding: 0;
@@ -38,6 +37,9 @@
 
     -fx-padding: 4px 12px 8px 12px;
     -fx-display-caret: false;
+
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #d0d0d0;
 }
 
 .search-field:focused {
@@ -61,7 +63,7 @@
     -fx-background-radius: 30px;
     -fx-border-radius: 30px;
 
-    -fx-font-family: "Requiem 9";
+    -fx-font-family: "IBM Plex Sans";
     -fx-font-size: 14px;
 
     -fx-padding: 0px 6px 0px 6px;
@@ -73,7 +75,7 @@
     -fx-background-color: transparent;
     -fx-text-fill: white;
 
-    -fx-font-family: "Requiem";
+    -fx-font-family: "IBM Plex Sans";
     -fx-font-size: 14px;
 }
 
@@ -123,7 +125,7 @@
 .combo-box-popup .list-cell {
     -fx-background-color: transparent;
     -fx-text-fill: white;
-    -fx-font-family: "Requiem 9";
+    -fx-font-family: "IBM Plex Sans";
     -fx-font-size: 14px;
     -fx-padding: 6px 10px;
     -fx-background-radius: 12px;
@@ -140,14 +142,14 @@
 .combo-box-popup .list-cell:selected {
     -fx-background-color: rgba(176, 0, 32, 0.75);
     -fx-text-fill: white;
-    -fx-font-family: "Requiem 9";
+    -fx-font-family: "IBM Plex Sans";
     -fx-background-radius: 12px;
 }
 
 .filter-combo .list-cell {
     -fx-background-color: transparent;
     -fx-text-fill: white;
-    -fx-font-family: "Requiem 9";
+    -fx-font-family: "IBM Plex Sans";
 }
 .achievement-scroll,
 .achievement-scroll > .viewport {
@@ -162,12 +164,17 @@
     -fx-border-radius: 0;
     -fx-background-radius: 0;
 }
-
-.achievement-checkbox:selected .box {
-    -fx-background-color: #7a0014;
-    -fx-border-color: #b00020;
+.achievement-row {
+    -fx-opacity: 1.0;
 }
 
-.achievement-checkbox:selected .mark {
+.achievement-row.completed {
+    -fx-opacity: 0.3;
+}
+
+.check-box:selected .mark {
     -fx-background-color: white;
+    -fx-shape: "M 0 2 L 2 0 L 5 3 L 8 0 L 10 2 L 7 5 L 10 8 L 8 10 L 5 7 L 2 10 L 0 8 L 3 5 Z";
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
 }

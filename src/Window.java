@@ -15,6 +15,7 @@ import javafx.scene.media.MediaView;
 import javafx.scene.image.Image;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +32,9 @@ public class Window extends Application {
     private ComboBox<String> difficultyFilter;
     private ComboBox<String> statusFilter;
     private TextField searchField;
-
+    private MediaPlayer musicPlayer;
+    private MediaPlayer rainPlayer;
+    private MediaPlayer checkSound;
     private IntegerProperty completed;
     private ProgressBar progressBar;
     private Label progressLabel;
@@ -40,6 +43,29 @@ public class Window extends Application {
 
     @Override
     public void start(Stage stage) {
+
+        Media music = new Media(
+                getClass().getResource("re2 safe room music.mp3").toExternalForm()
+        );
+        Media rain = new Media(
+                getClass().getResource("heavy storm rain loop.wav").toExternalForm()
+        );
+
+        musicPlayer = new MediaPlayer(music);
+        rainPlayer = new MediaPlayer(rain);
+        musicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        rainPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        musicPlayer.setVolume(0.2);
+        rainPlayer.setVolume(0.1);
+        musicPlayer.play();
+        rainPlayer.play();
+
+        Media sfx = new Media(
+                getClass().getResource("typewriter sound.wav").toExternalForm()
+        );
+
+        checkSound = new MediaPlayer(sfx);
+        checkSound.setVolume(0.8);
 
         AchievementRepository repository = new AchievementRepository();
         allAchievements = repository.getAllAchievements();
@@ -220,7 +246,7 @@ public class Window extends Application {
 
         searchField = new TextField();
         searchField.setPromptText("Search achievements...");
-        searchField.setFont(Font.font("Requiem 9", 16));
+        searchField.setFont(Font.font("IBM Plex Sans", 16));
         topPanel.getChildren().add(searchField);
         VBox.setMargin(searchField, new Insets(10, 0, 0, 0));
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -260,6 +286,9 @@ public class Window extends Application {
                 completedAchievements.contains(achievement.getId())
         );
 
+        VBox achievementInfo = new VBox();
+        achievementInfo.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(achievementInfo, Priority.ALWAYS);
         Label nameLabel = new Label(achievement.getName());
 
         Label categoryLabel = new Label(
@@ -269,7 +298,6 @@ public class Window extends Application {
                 achievement.getDescription()
         );
 
-        VBox achievementInfo = new VBox();
         VBox.setMargin(descriptionLabel, new Insets(5, 0, 0, 0));
 
         String stars =
@@ -277,7 +305,6 @@ public class Window extends Application {
                         + "☆".repeat(5 - achievement.getDifficulty());
 
         Label difficultyLabel = new Label(stars);
-        difficultyLabel.setStyle("-fx-text-fill: white;");
 
         achievementInfo.getChildren().addAll(
                 nameLabel,
@@ -294,6 +321,7 @@ public class Window extends Application {
         achievementRow.setSpacing(10);
         achievementRow.setPadding(new Insets(7, 8, 7, 8));
         achievementRow.setAlignment(Pos.TOP_LEFT);
+        achievementRow.setMaxWidth(Double.MAX_VALUE);
         checkBox.setTranslateY(6);
 
         nameLabel.setFont(Font.font("IBM Plex Sans",FontWeight.BOLD, 20));
@@ -301,9 +329,11 @@ public class Window extends Application {
         difficultyLabel.setFont(Font.font("IBM Plex Sans", FontWeight.BOLD, 11));
         descriptionLabel.setFont(Font.font("IBM Plex Sans", 16));
 
-        nameLabel.setStyle("-fx-text-fill: white;");
-        categoryLabel.setStyle("-fx-text-fill: white;");
-        descriptionLabel.setStyle("-fx-text-fill: white;");
+        nameLabel.getStyleClass().add("achievement-text");
+        categoryLabel.getStyleClass().add("achievement-text");
+        difficultyLabel.getStyleClass().add("achievement-text");
+        descriptionLabel.getStyleClass().add("achievement-text");
+
         descriptionLabel.setWrapText(true);
         descriptionLabel.setMaxWidth(360);
         checkBox.getStyleClass().add("achievement-checkbox");
@@ -318,6 +348,10 @@ public class Window extends Application {
 
         checkBox.setOnAction(event -> {
             if (checkBox.isSelected()) {
+
+                checkSound.seek(Duration.ZERO);
+                checkSound.play();
+
                 completedAchievements.add(achievement.getId());
                 achievementRow.getStyleClass().add("completed");
             } else {
@@ -335,6 +369,71 @@ public class Window extends Application {
                     "Completed: " + completed.get() + "/" + TOTAL_ACHIEVEMENTS
             );
         });
+
+
+        if (achievement.getHint() != null) {
+
+            Button hintButton = new Button("Hint");
+            hintButton.getStyleClass().add("hint-button");
+
+            Label hintLabel = new Label(achievement.getHint());
+            hintLabel.getStyleClass().add("hint-text");
+            hintLabel.setWrapText(true);
+            hintLabel.setMaxWidth(380);
+
+            Hyperlink guideLink = null;
+
+            VBox hintContentBox = new VBox(3);
+            hintContentBox.setAlignment(Pos.TOP_LEFT);
+
+            hintLabel.setVisible(false);
+            hintLabel.setManaged(false);
+
+            hintContentBox.getChildren().add(hintLabel);
+
+            if (achievement.getUrl() != null) {
+                guideLink = new Hyperlink("[ Video Guide ]");
+                guideLink.getStyleClass().add("guide-link");
+
+                guideLink.setVisible(false);
+                guideLink.setManaged(false);
+
+                hintContentBox.getChildren().add(guideLink);
+
+                guideLink.setOnAction(event -> {
+                    getHostServices().showDocument(achievement.getUrl());
+                });
+            }
+
+            VBox hintBox = new VBox(5);
+            hintBox.setMaxWidth(Double.MAX_VALUE);
+
+            HBox buttonBox = new HBox(hintButton);
+            buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+            hintBox.getChildren().addAll(
+                    buttonBox,
+                    hintContentBox
+            );
+
+            VBox.setMargin(hintBox, new Insets(8, 0, 0, 0));
+            achievementInfo.getChildren().add(hintBox);
+
+            Hyperlink finalGuideLink = guideLink;
+
+            hintButton.setOnAction(event -> {
+
+                boolean showHint = !hintLabel.isVisible();
+
+                hintLabel.setVisible(showHint);
+                hintLabel.setManaged(showHint);
+
+                if (finalGuideLink != null) {
+                    finalGuideLink.setVisible(showHint);
+                    finalGuideLink.setManaged(showHint);
+                }
+            });
+        }
     }
 
     private void applyFilters() {

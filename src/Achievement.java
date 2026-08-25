@@ -4,14 +4,16 @@ public class Achievement {
     private String description;
     private int difficulty;
     private String hint;
+    private String url;
     private String category;
 
-    public Achievement(int id, String name, String description, int difficulty, String hint, String category) {
+    public Achievement(int id, String name, String description, int difficulty, String hint,String url, String category) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.difficulty = difficulty;
         this.hint = hint;
+        this.url = url;
         this.category = category;
 
     }
@@ -31,5 +33,6 @@ public class Achievement {
     public String getHint() {
         return hint;
     }
+    public String getUrl() {return url;}
     public String getCategory() {return category; }
 }

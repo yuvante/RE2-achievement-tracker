@@ -14,6 +14,7 @@ public class AchievementRepository {
             a.Description,
             a.Difficulty,
             a.Hint,
+            a.Guide_URL,
             c.Name AS CategoryName
         FROM Achievement a
         JOIN Category c
@@ -33,6 +34,7 @@ public class AchievementRepository {
                         resultSet.getString("Description"),
                         resultSet.getInt("Difficulty"),
                         resultSet.getString("Hint"),
+                        resultSet.getString("Guide_URL"),
                         resultSet.getString("CategoryName")
                 );
 

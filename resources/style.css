@@ -10,20 +10,32 @@
 /* =========================
    PROGRESS BAR
    ========================= */
+
 .progress-bar {
-    -fx-padding: 0; -fx-background-insets: 0; }
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+}
 
 .progress-bar > .track {
-    -fx-background-color: black; -fx-background-insets: 0; -fx-background-radius: 0; }
+    -fx-background-color: black;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
 
 .progress-bar > .bar {
-    -fx-background-color: #b00020; -fx-background-insets: 0; -fx-background-radius: 0;
-    -fx-padding: 0; }
+    -fx-background-color: #b00020;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+
 .progress-label {
-    -fx-text-fill: white; }
+    -fx-text-fill: white;
+}
+
 
 /* =========================
-   SEARCH BAR
+   SEARCH FIELD
    ========================= */
 
 .search-field {
@@ -44,11 +56,9 @@
     -fx-display-caret: false;
 }
 
-/* White instead of red when active */
 .search-field:focused {
     -fx-background-color: rgba(30, 30, 30, 0.90);
     -fx-border-color: white;
-    -fx-border-width: 1px;
 
     -fx-background-insets: 0;
     -fx-background-radius: 30px;
@@ -73,11 +83,9 @@
     -fx-font-family: "IBM Plex Sans";
     -fx-font-size: 14px;
 
-    -fx-padding: 0px 6px 0px 6px;
+    -fx-padding: 0 6px;
 }
 
-
-/* Text inside closed ComboBox */
 .filter-combo .list-cell {
     -fx-background-color: transparent;
     -fx-text-fill: white;
@@ -86,25 +94,17 @@
     -fx-font-size: 14px;
 }
 
-
-/* Arrow area */
 .filter-combo .arrow-button {
     -fx-background-color: transparent;
 }
 
-
-/* Arrow */
 .filter-combo .arrow {
     -fx-background-color: #bcbcbc;
 }
 
-
-/* White highlight when active */
 .filter-combo:focused {
     -fx-background-color: rgba(30, 30, 30, 0.90);
-
     -fx-border-color: white;
-    -fx-border-width: 1px;
 
     -fx-background-insets: 0;
     -fx-background-radius: 30px;
@@ -129,10 +129,8 @@
     -fx-padding: 5px 12px;
 }
 
-
 .combo-box-popup .list-cell {
     -fx-background-color: transparent;
-
     -fx-text-fill: #dddddd;
 
     -fx-font-family: "IBM Plex Sans";
@@ -142,18 +140,13 @@
     -fx-background-radius: 12px;
 }
 
-
-/* Hover = subtle grey */
 .combo-box-popup .list-cell:hover {
     -fx-background-color: rgba(255, 255, 255, 0.12);
     -fx-text-fill: white;
 }
 
-
-/* Selected = stronger grey */
 .combo-box-popup .list-cell:selected {
     -fx-background-color: rgba(255, 255, 255, 0.20);
-
     -fx-text-fill: white;
 
     -fx-font-family: "IBM Plex Sans";
@@ -170,6 +163,7 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }
+
 .achievement-text {
     -fx-text-fill: white;
 }
@@ -182,8 +176,9 @@
     -fx-text-fill: grey;
 }
 
+
 /* =========================
-   CHECKBOX
+   ACHIEVEMENT CHECKBOX
    ========================= */
 
 .achievement-checkbox .box {
@@ -196,15 +191,11 @@
     -fx-background-radius: 0;
 }
 
-
-/* Selected checkbox stays monochrome */
 .achievement-checkbox:selected .box {
     -fx-background-color: black;
     -fx-border-color: grey;
 }
 
-
-/* X */
 .achievement-checkbox:selected .mark {
     -fx-background-color: grey;
 
@@ -215,14 +206,20 @@
     -fx-scale-y: 0.95;
 }
 
-/* Hints */
+
+/* =========================
+   HINT SYSTEM
+   ========================= */
+
 .hint-button {
     -fx-background-color: transparent;
+
     -fx-border-color: #777777;
     -fx-border-width: 1px;
     -fx-border-radius: 3px;
 
     -fx-text-fill: #dddddd;
+
     -fx-font-family: "IBM Plex Sans";
     -fx-font-weight: bold;
     -fx-font-size: 14px;
@@ -232,17 +229,18 @@
     -fx-cursor: hand;
 }
 
-.hint-text {
-    -fx-font-size: 13px;
-}
-
 .hint-button:hover {
     -fx-border-color: white;
     -fx-text-fill: white;
 }
 
+.hint-text {
+    -fx-font-size: 13px;
+}
+
 .guide-link {
     -fx-text-fill: #b00020;
+
     -fx-font-family: "IBM Plex Sans";
     -fx-font-size: 10px;
 
@@ -252,4 +250,157 @@
 
 .guide-link:hover {
     -fx-text-fill: white;
+}
+
+
+/* =========================
+   RIGHT-SIDE BUTTONS
+   ========================= */
+
+.side-button {
+    -fx-background-color: #050505;
+
+    -fx-border-color: #8a8a8a;
+    -fx-border-width: 1px;
+    -fx-border-radius: 2px;
+    -fx-background-radius: 2px;
+
+    -fx-alignment: CENTER;
+    -fx-content-display: GRAPHIC_ONLY;
+
+    -fx-min-width: 45px;
+    -fx-min-height: 45px;
+    -fx-pref-width: 45px;
+    -fx-pref-height: 45px;
+
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+.side-button:hover {
+    -fx-background-color: #1c1c1c;
+    -fx-border-color: white;
+}
+
+.side-button:pressed {
+    -fx-background-color: #333333;
+}
+
+
+/* =========================
+   UMBRELLA CLOSE BUTTON
+   ========================= */
+
+.close-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+
+    -fx-font-family: "Requiem 9";
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+
+    -fx-alignment: CENTER;
+    -fx-padding: 0;
+
+    -fx-cursor: hand;
+}
+
+.close-button:hover {
+    -fx-text-fill: #b00020;
+}
+
+.close-button:pressed {
+    -fx-text-fill: #7a0015;
+}
+
+
+/* =========================
+   UMBRELLA CARD LINKS
+   ========================= */
+
+.card-link {
+    -fx-background-color: transparent;
+}
+
+.card-hitbox {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 2px;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: transparent;
+    -fx-underline: false;
+
+    -fx-cursor: hand;
+}
+
+.card-hitbox:hover {
+    -fx-border-color: white;
+}
+
+.card-hitbox:pressed {
+    -fx-border-color: white;
+}
+
+.card-hitbox:focused {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+
+/* =========================
+   SETTINGS MENU
+   ========================= */
+
+.settings-box {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.settings-title {
+    -fx-text-fill: white;
+
+    -fx-font-family: "Requiem 9";
+    -fx-font-size: 28px;
+}
+
+.settings-option,
+.settings-value {
+    -fx-text-fill: white;
+
+    -fx-font-family: "Requiem 9";
+    -fx-font-size: 20px;
+}
+
+.settings-reset {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+
+    -fx-font-family: "Requiem 9";
+    -fx-font-size: 20px;
+
+    -fx-cursor: hand;
+}
+
+.settings-reset:hover {
+    -fx-text-fill: #b00020;
+}
+
+.settings-close {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+
+    -fx-font-family: "Requiem 9";
+    -fx-font-size: 20px;
+
+    -fx-cursor: hand;
+}
+
+.settings-close:hover {
+    -fx-text-fill: #b00020;
 }

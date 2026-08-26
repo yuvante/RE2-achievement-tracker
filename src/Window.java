@@ -85,8 +85,240 @@ public class Window extends Application {
 
         achievementsBox.setStyle("-fx-background-color: transparent;");
         BorderPane root = new BorderPane();
-
         completed = new SimpleIntegerProperty(0);
+
+        StackPane overlay = new StackPane();
+        overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.70);");
+        overlay.setVisible(false);
+        overlay.setManaged(false);
+
+        Button menuButton = new Button();
+        Button umbrellaButton = new Button();
+
+        Image settingsImage = new Image(
+                getClass().getResource("settings button.png").toExternalForm()
+        );
+
+        Image umbrellaImage = new Image(
+                getClass().getResource("umbrella.png").toExternalForm()
+        );
+
+        ImageView settingsIcon = new ImageView(settingsImage);
+        ImageView umbrellaIcon = new ImageView(umbrellaImage);
+
+        settingsIcon.setFitWidth(37);
+        settingsIcon.setFitHeight(37);
+        settingsIcon.setPreserveRatio(true);
+
+        umbrellaIcon.setFitWidth(37);
+        umbrellaIcon.setFitHeight(37);
+        umbrellaIcon.setPreserveRatio(true);
+
+        menuButton.setGraphic(settingsIcon);
+        umbrellaButton.setGraphic(umbrellaIcon);
+
+        menuButton.getStyleClass().add("side-button");
+        umbrellaButton.getStyleClass().add("side-button");
+
+        VBox rightButtons = new VBox(8, menuButton, umbrellaButton);
+        rightButtons.setAlignment(Pos.TOP_CENTER);
+        rightButtons.setPadding(new Insets(10));
+
+        root.setRight(rightButtons);
+
+        VBox settingsBox = new VBox(10);
+        settingsBox.setMaxSize(600, 360);
+        settingsBox.setPadding(new Insets(20, 28, 20, 28));
+        settingsBox.getStyleClass().add("settings-box");
+
+        Label settingsTitle = new Label("SETTINGS");
+        settingsTitle.getStyleClass().add("settings-title");
+
+        Label musicLabel = new Label("Music");
+        Label musicValue = new Label("[ ON ]");
+
+        Label sfxLabel = new Label("Sound Effects");
+        Label sfxValue = new Label("[ ON ]");
+
+        Label rainLabel = new Label("Rain");
+        Label rainValue = new Label("[ ON ]");
+
+        Label backgroundLabel = new Label("Live Background");
+        Label backgroundValue = new Label("[ ON ]");
+
+        musicLabel.getStyleClass().add("settings-option");
+        sfxLabel.getStyleClass().add("settings-option");
+        rainLabel.getStyleClass().add("settings-option");
+        backgroundLabel.getStyleClass().add("settings-option");
+
+        musicValue.getStyleClass().add("settings-value");
+        sfxValue.getStyleClass().add("settings-value");
+        rainValue.getStyleClass().add("settings-value");
+        backgroundValue.getStyleClass().add("settings-value");
+
+        HBox musicRow = new HBox(musicLabel, musicValue);
+        HBox sfxRow = new HBox(sfxLabel, sfxValue);
+        HBox rainRow = new HBox(rainLabel, rainValue);
+        HBox backgroundRow = new HBox(backgroundLabel, backgroundValue);
+
+        HBox.setHgrow(musicLabel, Priority.ALWAYS);
+        HBox.setHgrow(sfxLabel, Priority.ALWAYS);
+        HBox.setHgrow(rainLabel, Priority.ALWAYS);
+        HBox.setHgrow(backgroundLabel, Priority.ALWAYS);
+
+        musicLabel.setMaxWidth(Double.MAX_VALUE);
+        sfxLabel.setMaxWidth(Double.MAX_VALUE);
+        rainLabel.setMaxWidth(Double.MAX_VALUE);
+        backgroundLabel.setMaxWidth(Double.MAX_VALUE);
+
+        Button resetButton = new Button("RESET ALL PROGRESS");
+        resetButton.getStyleClass().add("settings-reset");
+
+        HBox resetRow = new HBox(resetButton);
+        resetRow.setAlignment(Pos.CENTER);
+
+        Button settingsCloseButton = new Button("Close");
+        settingsCloseButton.getStyleClass().add("settings-close");
+
+        HBox closeRow = new HBox(settingsCloseButton);
+        closeRow.setAlignment(Pos.CENTER_RIGHT);
+
+        settingsBox.getChildren().addAll(
+                settingsTitle,
+                musicRow,
+                sfxRow,
+                rainRow,
+                backgroundRow,
+                resetRow,
+                closeRow
+        );
+
+        Image cardImage = new Image(
+                getClass().getResource("umbrella card.png").toExternalForm()
+        );
+
+        ImageView cardView = new ImageView(cardImage);
+        cardView.setFitWidth(700);
+        cardView.setPreserveRatio(true);
+
+        Hyperlink researchLink = new Hyperlink(" ");
+        Hyperlink portfolioLink = new Hyperlink(" ");
+        Hyperlink githubLink = new Hyperlink(" ");
+
+        researchLink.setStyle("-fx-background-color: transparent;");
+        portfolioLink.setStyle("-fx-background-color: transparent;");
+        githubLink.setStyle("-fx-background-color: transparent;");
+
+        researchLink.setOnAction(event ->
+                getHostServices().showDocument("NOTION_URL")
+        );
+
+        portfolioLink.setOnAction(event ->
+                getHostServices().showDocument("WEBSITE_URL")
+        );
+
+        githubLink.setOnAction(event ->
+                getHostServices().showDocument("https://github.com/yuvante")
+        );
+
+        researchLink.setPrefSize(459, 18);
+        portfolioLink.setPrefSize(459, 18);
+        githubLink.setPrefSize(459, 18);
+
+        researchLink.setLayoutX(25);
+        researchLink.setLayoutY(297);
+
+        portfolioLink.setLayoutX(25);
+        portfolioLink.setLayoutY(319);
+
+        githubLink.setLayoutX(25);
+        githubLink.setLayoutY(341);
+
+
+        researchLink.getStyleClass().add("card-hitbox");
+        portfolioLink.getStyleClass().add("card-hitbox");
+        githubLink.getStyleClass().add("card-hitbox");
+
+        researchLink.setFocusTraversable(false);
+        portfolioLink.setFocusTraversable(false);
+        githubLink.setFocusTraversable(false);
+
+        Pane cardPane = new Pane();
+        cardPane.setPrefSize(700, 450);
+
+        cardPane.getChildren().addAll(
+                cardView,
+                researchLink,
+                portfolioLink,
+                githubLink
+        );
+
+        VBox umbrellaBox = new VBox(15);
+        umbrellaBox.setAlignment(Pos.CENTER);
+        umbrellaBox.setMaxSize(750, 520);
+        umbrellaBox.setStyle(
+                "-fx-background-color: transparent;" +
+                        "-fx-padding: 0;"
+        );
+
+        Button umbrellaCloseButton = new Button("Close");
+        umbrellaCloseButton.getStyleClass().add("close-button");
+
+        umbrellaBox.getChildren().addAll(
+                cardPane,
+                umbrellaCloseButton
+        );
+
+        overlay.getChildren().addAll(
+                settingsBox,
+                umbrellaBox
+        );
+
+        settingsBox.setVisible(false);
+        settingsBox.setManaged(false);
+
+        umbrellaBox.setVisible(false);
+        umbrellaBox.setManaged(false);
+
+        menuButton.setOnAction(event -> {
+
+            umbrellaBox.setVisible(false);
+            umbrellaBox.setManaged(false);
+
+            settingsBox.setVisible(true);
+            settingsBox.setManaged(true);
+
+            overlay.setVisible(true);
+            overlay.setManaged(true);
+        });
+
+        settingsCloseButton.setOnAction(event -> {
+            overlay.setVisible(false);
+            overlay.setManaged(false);
+
+            settingsBox.setVisible(false);
+            settingsBox.setManaged(false);
+        });
+
+        umbrellaButton.setOnAction(event -> {
+
+            settingsBox.setVisible(false);
+            settingsBox.setManaged(false);
+
+            umbrellaBox.setVisible(true);
+            umbrellaBox.setManaged(true);
+
+            overlay.setVisible(true);
+            overlay.setManaged(true);
+        });
+
+        umbrellaCloseButton.setOnAction(event -> {
+            overlay.setVisible(false);
+            overlay.setManaged(false);
+
+            umbrellaBox.setVisible(false);
+            umbrellaBox.setManaged(false);
+        });
 
         progressBar = new ProgressBar(0);
         progressBar.setMaxWidth(Double.MAX_VALUE);
@@ -96,7 +328,7 @@ public class Window extends Application {
                 "-fx-accent: #b00020;"
         );
 
-        progressLabel = new Label("Completed: 0/" + TOTAL_ACHIEVEMENTS);
+        progressLabel = new Label(" 0 / " + TOTAL_ACHIEVEMENTS);
         Font requiemFont = Font.loadFont(getClass().getResourceAsStream("/font.ttf"), 18);
         progressLabel.setFont(requiemFont);
         progressLabel.getStyleClass().add("progress-label");
@@ -125,7 +357,8 @@ public class Window extends Application {
 
         backgroundPane.getChildren().addAll(
                 mediaView,
-                root
+                root,
+                overlay
         );
 
         backgroundPane.setStyle("-fx-background-color: black;");
@@ -366,7 +599,7 @@ public class Window extends Application {
             );
 
             progressLabel.setText(
-                    "Completed: " + completed.get() + "/" + TOTAL_ACHIEVEMENTS
+                    completed.get() + " / " + TOTAL_ACHIEVEMENTS
             );
         });
 

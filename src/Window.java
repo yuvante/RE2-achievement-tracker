@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.image.Image;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 import javafx.geometry.Insets;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 public class Window extends Application {
 
@@ -35,9 +35,11 @@ public class Window extends Application {
     private MediaPlayer musicPlayer;
     private MediaPlayer rainPlayer;
     private MediaPlayer checkSound;
+    private boolean soundEffectsEnabled = true;
     private IntegerProperty completed;
     private ProgressBar progressBar;
     private Label progressLabel;
+    private AchievementRepository repository;
 
     private final Set<Integer> completedAchievements = new HashSet<>();
 
@@ -67,8 +69,13 @@ public class Window extends Application {
         checkSound = new MediaPlayer(sfx);
         checkSound.setVolume(0.8);
 
-        AchievementRepository repository = new AchievementRepository();
+
+        repository = new AchievementRepository();
         allAchievements = repository.getAllAchievements();
+        completedAchievements.addAll(
+                repository.getCompletedAchievementIds()
+        );
+
         achievementsBox = new VBox();
 
         ScrollPane scrollPane = new ScrollPane(achievementsBox);
@@ -84,8 +91,11 @@ public class Window extends Application {
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
         achievementsBox.setStyle("-fx-background-color: transparent;");
+        achievementsBox.setPadding(new Insets(0, 0, 45, 0));
         BorderPane root = new BorderPane();
-        completed = new SimpleIntegerProperty(0);
+        completed = new SimpleIntegerProperty(
+                completedAchievements.size()
+        );
 
         StackPane overlay = new StackPane();
         overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.70);");
@@ -136,43 +146,84 @@ public class Window extends Application {
 
         Label musicLabel = new Label("Music");
         Label musicValue = new Label("[ ON ]");
+        final boolean[] musicEnabled = {true};
+
+        musicValue.setOnMouseClicked(event -> {
+            musicEnabled[0] = !musicEnabled[0];
+
+            if (musicEnabled[0]) {
+                musicPlayer.play();
+                musicValue.setText("[ ON ]");
+            } else {
+                musicPlayer.pause();
+                musicValue.setText("[ OFF ]");
+            }
+        });
 
         Label sfxLabel = new Label("Sound Effects");
         Label sfxValue = new Label("[ ON ]");
+        sfxValue.setOnMouseClicked(event -> {
+            soundEffectsEnabled = !soundEffectsEnabled;
+
+            sfxValue.setText(
+                    soundEffectsEnabled ? "[ ON ]" : "[ OFF ]"
+            );
+        });
 
         Label rainLabel = new Label("Rain");
         Label rainValue = new Label("[ ON ]");
+        final boolean[] rainEnabled = {true};
 
-        Label backgroundLabel = new Label("Live Background");
-        Label backgroundValue = new Label("[ ON ]");
+        rainValue.setOnMouseClicked(event -> {
+            rainEnabled[0] = !rainEnabled[0];
+
+            if (rainEnabled[0]) {
+                rainPlayer.play();
+                rainValue.setText("[ ON ]");
+            } else {
+                rainPlayer.pause();
+                rainValue.setText("[ OFF ]");
+            }
+        });
 
         musicLabel.getStyleClass().add("settings-option");
         sfxLabel.getStyleClass().add("settings-option");
         rainLabel.getStyleClass().add("settings-option");
-        backgroundLabel.getStyleClass().add("settings-option");
 
         musicValue.getStyleClass().add("settings-value");
         sfxValue.getStyleClass().add("settings-value");
         rainValue.getStyleClass().add("settings-value");
-        backgroundValue.getStyleClass().add("settings-value");
 
         HBox musicRow = new HBox(musicLabel, musicValue);
         HBox sfxRow = new HBox(sfxLabel, sfxValue);
         HBox rainRow = new HBox(rainLabel, rainValue);
-        HBox backgroundRow = new HBox(backgroundLabel, backgroundValue);
 
         HBox.setHgrow(musicLabel, Priority.ALWAYS);
         HBox.setHgrow(sfxLabel, Priority.ALWAYS);
         HBox.setHgrow(rainLabel, Priority.ALWAYS);
-        HBox.setHgrow(backgroundLabel, Priority.ALWAYS);
 
         musicLabel.setMaxWidth(Double.MAX_VALUE);
         sfxLabel.setMaxWidth(Double.MAX_VALUE);
         rainLabel.setMaxWidth(Double.MAX_VALUE);
-        backgroundLabel.setMaxWidth(Double.MAX_VALUE);
 
         Button resetButton = new Button("RESET ALL PROGRESS");
         resetButton.getStyleClass().add("settings-reset");
+        resetButton.setOnAction(event -> {
+
+            repository.resetAllProgress();
+
+            completedAchievements.clear();
+
+            completed.set(0);
+
+            progressBar.setProgress(0);
+
+            progressLabel.setText(
+                    "0 out of " + TOTAL_ACHIEVEMENTS
+            );
+
+            applyFilters();
+        });
 
         HBox resetRow = new HBox(resetButton);
         resetRow.setAlignment(Pos.CENTER);
@@ -188,7 +239,6 @@ public class Window extends Application {
                 musicRow,
                 sfxRow,
                 rainRow,
-                backgroundRow,
                 resetRow,
                 closeRow
         );
@@ -210,15 +260,15 @@ public class Window extends Application {
         githubLink.setStyle("-fx-background-color: transparent;");
 
         researchLink.setOnAction(event ->
-                getHostServices().showDocument("NOTION_URL")
+                getHostServices().showDocument("https://app.notion.com/p/PROJECT-ACHIEVEMENT-TRACKER-3b3d434ac90480ccbe2ee13db35f312b?source=copy_link")
         );
 
         portfolioLink.setOnAction(event ->
-                getHostServices().showDocument("WEBSITE_URL")
+                getHostServices().showDocument("https://github.com/yuvante")
         );
 
         githubLink.setOnAction(event ->
-                getHostServices().showDocument("https://github.com/yuvante")
+                getHostServices().showDocument("https://github.com/yuvante/RE2-achievement-tracker")
         );
 
         researchLink.setPrefSize(459, 18);
@@ -226,13 +276,13 @@ public class Window extends Application {
         githubLink.setPrefSize(459, 18);
 
         researchLink.setLayoutX(25);
-        researchLink.setLayoutY(297);
+        researchLink.setLayoutY(294);
 
         portfolioLink.setLayoutX(25);
-        portfolioLink.setLayoutY(319);
+        portfolioLink.setLayoutY(318);
 
         githubLink.setLayoutX(25);
-        githubLink.setLayoutY(341);
+        githubLink.setLayoutY(342);
 
 
         researchLink.getStyleClass().add("card-hitbox");
@@ -320,16 +370,20 @@ public class Window extends Application {
             umbrellaBox.setManaged(false);
         });
 
-        progressBar = new ProgressBar(0);
+        progressBar = new ProgressBar(
+                (double) completed.get() / TOTAL_ACHIEVEMENTS
+        );
         progressBar.setMaxWidth(Double.MAX_VALUE);
-        progressBar.setPrefWidth(1550);
-        progressBar.setPrefHeight(35);
+        progressBar.setPrefWidth(1290);
+        progressBar.setPrefHeight(20);
         progressBar.setStyle(
                 "-fx-accent: #b00020;"
         );
 
-        progressLabel = new Label(" 0 / " + TOTAL_ACHIEVEMENTS);
-        Font requiemFont = Font.loadFont(getClass().getResourceAsStream("/font.ttf"), 18);
+        progressLabel = new Label(
+                completed.get() + " out of " + TOTAL_ACHIEVEMENTS
+        );
+        Font requiemFont = Font.loadFont(getClass().getResourceAsStream("font.ttf"), 14);
         progressLabel.setFont(requiemFont);
         progressLabel.getStyleClass().add("progress-label");
         StackPane.setAlignment(progressLabel, Pos.TOP_CENTER);
@@ -339,39 +393,51 @@ public class Window extends Application {
                 progressBar,
                 progressLabel
         );
-        progressPane.setPrefHeight(30);
-        progressPane.setMaxHeight(30);
+        progressPane.setPrefHeight(20);
+        progressPane.setMaxHeight(20);
         progressBar.setMaxWidth(Double.MAX_VALUE);
         progressBar.setMaxHeight(Double.MAX_VALUE);
 
-        root.setBottom(progressPane);
+        HBox progressContainer = new HBox(progressPane);
+
+        progressContainer.setAlignment(Pos.CENTER);
+        progressContainer.setPadding(new Insets(0, 5, 2, 5));
+
+        progressContainer.setMaxHeight(Region.USE_PREF_SIZE);
+        progressContainer.setMouseTransparent(true);
+
+        HBox.setHgrow(progressPane, Priority.ALWAYS);
+        progressPane.setMaxWidth(Double.MAX_VALUE);
+
+        HBox.setHgrow(progressPane, Priority.ALWAYS);
+        progressPane.setMaxWidth(Double.MAX_VALUE);
+
         root.setStyle("-fx-background-color: transparent;");
 
-        Media background = new Media(getClass().getResource("/re2.mp4").toExternalForm());
-        MediaPlayer  mediaPlayer = new MediaPlayer(background);
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.play();
-        MediaView  mediaView = new MediaView(mediaPlayer);
+        Image background1 = new Image(getClass().getResourceAsStream("re2 background2.png"));
+        ImageView appBackground = new ImageView(background1);
 
         StackPane backgroundPane = new StackPane();
 
         backgroundPane.getChildren().addAll(
-                mediaView,
+                appBackground,
                 root,
+                progressContainer,
                 overlay
         );
-
+        StackPane.setAlignment(progressContainer, Pos.BOTTOM_CENTER);
+        StackPane.setMargin(progressContainer, new Insets(0, 12, 2, 12));
         backgroundPane.setStyle("-fx-background-color: black;");
-        mediaView.fitWidthProperty().bind(backgroundPane.widthProperty());
-        mediaView.fitHeightProperty().bind(backgroundPane.heightProperty());
-        mediaView.setPreserveRatio(true);
+        appBackground.fitWidthProperty().bind(backgroundPane.widthProperty());
+        appBackground.fitHeightProperty().bind(backgroundPane.heightProperty());
+        appBackground.setPreserveRatio(true);
 
         Image icon = new Image(getClass().getResource("/re2 icon.png").toExternalForm());
         stage.getIcons().add(icon);
 
         Image logo = new Image(getClass().getResource("/re2 logo.png").toExternalForm());
         ImageView logoView = new ImageView(logo);
-        logoView.setFitWidth(450);
+        logoView.setFitWidth(400);
         logoView.setPreserveRatio(true);
 
         Label completionLabel = new Label();
@@ -481,6 +547,8 @@ public class Window extends Application {
         searchField.setPromptText("Search achievements...");
         searchField.setFont(Font.font("IBM Plex Sans", 16));
         topPanel.getChildren().add(searchField);
+        searchField.setPrefWidth(390);
+        searchField.setMaxWidth(390);
         VBox.setMargin(searchField, new Insets(10, 0, 0, 0));
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             applyFilters();
@@ -503,7 +571,7 @@ public class Window extends Application {
                 displayAchievement(achievement);
         }
 
-        Scene scene = new Scene(backgroundPane, 1550, 800);
+        Scene scene = new Scene(backgroundPane, 1290, 720);
         stage.setResizable(false);
         scene.getStylesheets().add(
                 getClass().getResource("/style.css").toExternalForm());
@@ -580,16 +648,31 @@ public class Window extends Application {
         }
 
         checkBox.setOnAction(event -> {
+
             if (checkBox.isSelected()) {
 
-                checkSound.seek(Duration.ZERO);
-                checkSound.play();
+                if (soundEffectsEnabled) {
+                    checkSound.seek(Duration.ZERO);
+                    checkSound.play();
+                }
 
                 completedAchievements.add(achievement.getId());
                 achievementRow.getStyleClass().add("completed");
+
+                repository.setAchievementCompleted(
+                        achievement.getId(),
+                        true
+                );
+
             } else {
+
                 completedAchievements.remove(achievement.getId());
                 achievementRow.getStyleClass().remove("completed");
+
+                repository.setAchievementCompleted(
+                        achievement.getId(),
+                        false
+                );
             }
 
             completed.set(completedAchievements.size());
@@ -599,7 +682,7 @@ public class Window extends Application {
             );
 
             progressLabel.setText(
-                    completed.get() + " / " + TOTAL_ACHIEVEMENTS
+                    completed.get() + " out of " + TOTAL_ACHIEVEMENTS
             );
         });
 

@@ -19,6 +19,7 @@
 .progress-bar > .track {
     -fx-background-color: rgba(0, 0, 0, 0.75);
     -fx-background-radius: 8px;
+
     -fx-border-color: #444444;
     -fx-border-width: 1px;
     -fx-border-radius: 8px;
@@ -40,29 +41,23 @@
 
 .search-field {
     -fx-background-color: rgba(20, 20, 20, 0.75);
+    -fx-background-insets: 0;
+    -fx-background-radius: 30px;
 
     -fx-border-color: #777777;
     -fx-border-width: 1px;
+    -fx-border-radius: 30px;
 
     -fx-text-fill: white;
     -fx-prompt-text-fill: #bcbcbc;
 
-    -fx-background-insets: 0;
-    -fx-background-radius: 30px;
-    -fx-border-radius: 30px;
-
-    -fx-padding: 4px 12px 4px 12px;
-
+    -fx-padding: 4px 12px;
     -fx-display-caret: false;
 }
 
 .search-field:focused {
     -fx-background-color: rgba(30, 30, 30, 0.90);
     -fx-border-color: white;
-
-    -fx-background-insets: 0;
-    -fx-background-radius: 30px;
-    -fx-border-radius: 30px;
 }
 
 
@@ -72,12 +67,11 @@
 
 .filter-combo {
     -fx-background-color: rgba(10, 10, 10, 0.80);
+    -fx-background-insets: 0;
+    -fx-background-radius: 30px;
 
     -fx-border-color: #777777;
     -fx-border-width: 1px;
-
-    -fx-background-insets: 0;
-    -fx-background-radius: 30px;
     -fx-border-radius: 30px;
 
     -fx-font-family: "IBM Plex Sans";
@@ -109,10 +103,6 @@
 .filter-combo:focused {
     -fx-background-color: rgba(30, 30, 30, 0.90);
     -fx-border-color: white;
-
-    -fx-background-insets: 0;
-    -fx-background-radius: 30px;
-    -fx-border-radius: 30px;
 }
 
 
@@ -122,12 +112,11 @@
 
 .combo-box-popup .list-view {
     -fx-background-color: rgba(10, 10, 10, 0.97);
+    -fx-background-insets: 0;
+    -fx-background-radius: 15px;
 
     -fx-border-color: #777777;
     -fx-border-width: 1px;
-
-    -fx-background-insets: 0;
-    -fx-background-radius: 15px;
     -fx-border-radius: 15px;
 
     -fx-padding: 5px 12px;
@@ -135,13 +124,14 @@
 
 .combo-box-popup .list-cell {
     -fx-background-color: transparent;
+    -fx-background-radius: 12px;
+
     -fx-text-fill: #dddddd;
 
     -fx-font-family: "IBM Plex Sans";
     -fx-font-size: 14px;
 
     -fx-padding: 6px 10px;
-    -fx-background-radius: 12px;
 }
 
 .combo-box-popup .list-cell:hover {
@@ -152,9 +142,6 @@
 .combo-box-popup .list-cell:selected {
     -fx-background-color: rgba(255, 255, 255, 0.20);
     -fx-text-fill: white;
-
-    -fx-font-family: "IBM Plex Sans";
-    -fx-background-radius: 12px;
 }
 
 
@@ -171,6 +158,7 @@
 .achievement-text {
     -fx-text-fill: white;
 }
+
 
 /* =========================
    COMPLETED ACHIEVEMENTS
@@ -202,13 +190,14 @@
 }
 
 .achievement-row.completed .guide-link {
-    -fx-text-fill: #650012;
-    -fx-opacity: 0.65;
+    -fx-text-fill: #b00020;
+    -fx-opacity: 0.45;
 }
 
 .achievement-row.completed .guide-link:hover {
-    -fx-text-fill: #650012;
+    -fx-text-fill: #b00020;
 }
+
 
 /* =========================
    ACHIEVEMENT CHECKBOX
@@ -216,12 +205,11 @@
 
 .achievement-checkbox .box {
     -fx-background-color: rgba(0, 0, 0, 0.45);
+    -fx-background-radius: 0;
 
     -fx-border-color: white;
     -fx-border-width: 1px;
-
     -fx-border-radius: 0;
-    -fx-background-radius: 0;
 }
 
 .achievement-checkbox:selected .box {
@@ -254,11 +242,10 @@
     -fx-text-fill: #dddddd;
 
     -fx-font-family: "IBM Plex Sans";
-    -fx-font-weight: bold;
     -fx-font-size: 14px;
+    -fx-font-weight: bold;
 
     -fx-padding: 4px 8px;
-
     -fx-cursor: hand;
 }
 
@@ -279,6 +266,8 @@
 
     -fx-border-color: transparent;
     -fx-padding: 2px 0 0 0;
+
+    -fx-cursor: hand;
 }
 
 .guide-link:hover {
@@ -294,8 +283,8 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 
-    -fx-alignment: CENTER;
-    -fx-content-display: GRAPHIC_ONLY;
+    -fx-alignment: center;
+    -fx-content-display: graphic-only;
 
     -fx-padding: 4px;
     -fx-cursor: hand;
@@ -324,7 +313,7 @@
     -fx-font-size: 25px;
     -fx-font-weight: bold;
 
-    -fx-alignment: CENTER;
+    -fx-alignment: center;
     -fx-padding: 0;
 
     -fx-cursor: hand;
@@ -335,20 +324,16 @@
 }
 
 .close-button:pressed {
-    -fx-text-fill: #7a0015;
+    -fx-text-fill: #b00020;
 }
-
 
 /* =========================
    UMBRELLA CARD LINKS
    ========================= */
 
-.card-link {
-    -fx-background-color: transparent;
-}
-
 .card-hitbox {
     -fx-background-color: transparent;
+
     -fx-border-color: transparent;
     -fx-border-width: 2px;
 
@@ -361,10 +346,7 @@
     -fx-cursor: hand;
 }
 
-.card-hitbox:hover {
-    -fx-border-color: #c3b9b1;
-}
-
+.card-hitbox:hover,
 .card-hitbox:pressed {
     -fx-border-color: #c3b9b1;
 }
@@ -400,28 +382,17 @@
 
     -fx-font-family: "Requiem 9";
     -fx-font-size: 20px;
-
-    -fx-cursor: hand;
-
 }
+
+.settings-value {
+    -fx-cursor: hand;
+}
+
 .settings-value:hover {
     -fx-text-fill: #b00020;
 }
 
-.settings-reset {
-    -fx-background-color: transparent;
-    -fx-text-fill: white;
-
-    -fx-font-family: "Requiem 9";
-    -fx-font-size: 20px;
-
-    -fx-cursor: hand;
-}
-
-.settings-reset:hover {
-    -fx-text-fill: #b00020;
-}
-
+.settings-reset,
 .settings-close {
     -fx-background-color: transparent;
     -fx-text-fill: white;
@@ -432,6 +403,7 @@
     -fx-cursor: hand;
 }
 
+.settings-reset:hover,
 .settings-close:hover {
     -fx-text-fill: #b00020;
 }

@@ -12,3 +12,8 @@ lib/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3

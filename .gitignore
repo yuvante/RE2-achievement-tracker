@@ -20,3 +20,6 @@ Thumbs.db
 
 # Bundled application database
 !resources/re2_achievements.sqlite
+
+# IntelliJ generated artifact files
+META-INF/

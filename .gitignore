@@ -17,3 +17,6 @@ Thumbs.db
 *.db
 *.sqlite
 *.sqlite3
+
+# Bundled application database
+!resources/re2-achievements.sqlite

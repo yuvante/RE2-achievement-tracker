@@ -106,7 +106,7 @@ public class Window extends Application {
         appBackground.fitHeightProperty().bind(backgroundPane.heightProperty());
         appBackground.setPreserveRatio(true);
 
-        Image icon = new Image(getClass().getResource("/re2 icon.png").toExternalForm());
+        Image icon = new Image(getClass().getResource("re2 icon.png").toExternalForm());
         stage.getIcons().add(icon);
 
         VBox leftPanel = createLeftPanel(scrollPane);
@@ -119,7 +119,7 @@ public class Window extends Application {
         Scene scene = new Scene(backgroundPane, 1290, 720);
         stage.setResizable(false);
         scene.getStylesheets().add(
-                getClass().getResource("/style.css").toExternalForm());
+                getClass().getResource("style.css").toExternalForm());
         stage.setTitle("Resident Evil 2 Achievement Tracker");
         stage.setScene(scene);
         stage.show();
@@ -529,7 +529,7 @@ public class Window extends Application {
         return rightButtons;
     }
     private VBox createLeftPanel(ScrollPane scrollPane) {
-        Image logo = new Image(getClass().getResource("/re2 logo.png").toExternalForm());
+        Image logo = new Image(getClass().getResource("re2 logo.png").toExternalForm());
         ImageView logoView = new ImageView(logo);
         logoView.setFitWidth(400);
         logoView.setPreserveRatio(true);

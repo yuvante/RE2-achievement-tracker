@@ -1,6 +1,6 @@
 # Resident Evil 2 Achievement Tracker
 
-![Main application interface](screenshots/tracker main screenshot.png)
+![Main application interface](screenshots/main.png)
 
 A desktop achievement tracking application for Resident Evil 2 Remake,
 built with Java, JavaFX and SQLite.
@@ -22,9 +22,17 @@ video guides, and keep your completion progress saved between sessions.
 
 ## Screenshots
 
-![Settings menu](screenshots/tracker screenshot2.png)
-![About me](screenshots/tracker screenshot3.png)
-![Searching and filtering](screenshots/tracker screenshot4.png)
+### Search, Filters & Hints
+
+![Searching and filtering](screenshots/filtering.png)
+
+### Settings
+
+![Settings menu](screenshots/settings.png)
+
+### About Me
+
+![About Me menu](screenshots/aboutme.png)
 
 ## Installation
 

@@ -6,3 +6,4 @@ public class Main {
         Application.launch(Window.class, args);
     }
 }
+
